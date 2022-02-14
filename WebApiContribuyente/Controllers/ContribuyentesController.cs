@@ -20,7 +20,7 @@ namespace WebApiContribuyente.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Contribuyente>>> Get()
         {
-            return await dbContext.Contribuyentes.ToListAsync();
+            return await dbContext.Contribuyentes.Include(x => x.Declaraciones).ToListAsync();
         }
 
         [HttpPost]

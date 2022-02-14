@@ -16,7 +16,6 @@ namespace WebApiContribuyente.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Mes = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RFC = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ContribuyenteId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
