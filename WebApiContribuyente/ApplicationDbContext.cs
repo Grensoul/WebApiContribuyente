@@ -11,6 +11,6 @@ namespace WebApiContribuyente
         }
 
         public DbSet<Contribuyente> Contribuyentes { get; set; }
-        public DbSet<Declaracion> Declaciones { get; set; }
+        public DbSet<Declaracion> Declaraciones { get; set; }
     }
 }
