@@ -6,7 +6,7 @@ namespace WebApiContribuyente.Controllers
 {
 
     [ApiController]
-    [Route("api/contribuyentes")]
+    [Route("api/[controller]")]
     public class ContribuyentesController : ControllerBase
     {
 
@@ -17,10 +17,70 @@ namespace WebApiContribuyente.Controllers
             this.dbContext = context;
         }
 
-        [HttpGet]
+        [HttpGet] // api/contribuyentes
+        [HttpGet("listado")] // api/contribuyentes/listado
+        [HttpGet("/listado")] // /listado
         public async Task<ActionResult<List<Contribuyente>>> Get()
         {
             return await dbContext.Contribuyentes.Include(x => x.Declaraciones).ToListAsync();
+        }
+
+        [HttpGet("primero")] // api/contribuyentes/primero
+        public async Task<ActionResult<Contribuyente>> PrimerContribuyente()
+        {
+            return await dbContext.Contribuyentes.FirstOrDefaultAsync();
+        }
+
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<Contribuyente>> Get(int id)
+        {
+            var contribuyente = await dbContext.Contribuyentes.FirstOrDefaultAsync(x => x.Id == id);
+
+            if(contribuyente == null)
+            {
+                return NotFound();
+            }
+
+            return contribuyente;
+        }
+
+        [HttpGet("{nombre}")]
+        public async Task<ActionResult<Contribuyente>> Get(string nombre)
+        {
+            var contribuyente = await dbContext.Contribuyentes.FirstOrDefaultAsync(x => x.Nombre.Contains(nombre));
+
+            if (contribuyente == null)
+            {
+                return NotFound();
+            }
+
+            return contribuyente;
+        }
+
+        /*[HttpGet("{id:int}/{nombre?}")]
+        public async Task<ActionResult<Contribuyente>> Get(int id, string nombre)
+        {
+            var contribuyente = await dbContext.Contribuyentes.FirstOrDefaultAsync(x => x.Nombre.Contains(nombre));
+
+            if (contribuyente == null)
+            {
+                return NotFound("No se encontró ningún recurso");
+            }
+
+            return contribuyente;
+        }*/
+
+        [HttpGet("{id:int}/{nombre=Lorenzo}")]
+        public async Task<ActionResult<Contribuyente>> Get(int id, string nombre)
+        {
+            var contribuyente = await dbContext.Contribuyentes.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (contribuyente == null)
+            {
+                return NotFound("No se encontró ningún recurso");
+            }
+
+            return contribuyente;
         }
 
         [HttpPost]
