@@ -17,16 +17,16 @@ namespace WebApiContribuyente.Controllers
             this.dbContext = context;
         }
 
-        [HttpGet] // api/contribuyentes
+        /*[HttpGet] // api/contribuyentes
         [HttpGet("listado")] // api/contribuyentes/listado
         [HttpGet("/listado")] // /listado
         public async Task<ActionResult<List<Contribuyente>>> Get()
         {
             return await dbContext.Contribuyentes.Include(x => x.Declaraciones).ToListAsync();
-        }
+        }*/
 
         [HttpGet("primero")] // api/contribuyentes/primero
-        public async Task<ActionResult<Contribuyente>> PrimerContribuyente()
+        public async Task<ActionResult<Contribuyente>> PrimerContribuyente([FromHeader] int valor)
         {
             return await dbContext.Contribuyentes.FirstOrDefaultAsync();
         }
@@ -44,8 +44,8 @@ namespace WebApiContribuyente.Controllers
             return contribuyente;
         }
 
-        [HttpGet("{nombre}")]
-        public async Task<ActionResult<Contribuyente>> Get(string nombre)
+        /*[HttpGet("{nombre}")]
+        public async Task<ActionResult<Contribuyente>> Get([FromRoute] string nombre)
         {
             var contribuyente = await dbContext.Contribuyentes.FirstOrDefaultAsync(x => x.Nombre.Contains(nombre));
 
@@ -55,7 +55,7 @@ namespace WebApiContribuyente.Controllers
             }
 
             return contribuyente;
-        }
+        }*/
 
         /*[HttpGet("{id:int}/{nombre?}")]
         public async Task<ActionResult<Contribuyente>> Get(int id, string nombre)
@@ -70,7 +70,7 @@ namespace WebApiContribuyente.Controllers
             return contribuyente;
         }*/
 
-        [HttpGet("{id:int}/{nombre=Lorenzo}")]
+        /*[HttpGet("{id:int}/{nombre=Lorenzo}")]
         public async Task<ActionResult<Contribuyente>> Get(int id, string nombre)
         {
             var contribuyente = await dbContext.Contribuyentes.FirstOrDefaultAsync(x => x.Id == id);
@@ -81,10 +81,49 @@ namespace WebApiContribuyente.Controllers
             }
 
             return contribuyente;
+        }*/
+
+        [HttpGet]
+        public List<Contribuyente> Get()
+        {
+            return dbContext.Contribuyentes.Include(x => x.Declaraciones).ToList();
+        }
+
+        [HttpGet("{id:int}/{nombre=Lorenzo}")]
+        public ActionResult<Contribuyente> Get(int id, string nombre)
+        {
+            var contribuyente = dbContext.Contribuyentes.FirstOrDefault(x => x.Id == id);
+            if (contribuyente == null)
+            {
+                return NotFound("No se encontró ningún recurso");
+            }
+            return contribuyente;
+        }
+
+        [HttpGet("query")]
+        public async Task<ActionResult<Contribuyente>> Get([FromQuery] string nombre)
+        {
+            var contribuyente = await dbContext.Contribuyentes.FirstOrDefaultAsync(x => x.Nombre.Contains(nombre));
+            if (contribuyente == null)
+            {
+                return NotFound();
+            }
+            return contribuyente;
+        }
+
+        [HttpGet("query2")]
+        public async Task<ActionResult<Contribuyente>> Get([FromQuery] string nombre, [FromQuery] int id)
+        {
+            var contribuyente = await dbContext.Contribuyentes.FirstOrDefaultAsync(x => x.Nombre.Contains(nombre));
+            if (contribuyente == null)
+            {
+                return NotFound();
+            }
+            return contribuyente;
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post(Contribuyente contribuyente)
+        public async Task<ActionResult> Post([FromBody] Contribuyente contribuyente)
         {
             dbContext.Add(contribuyente);
             await dbContext.SaveChangesAsync();
