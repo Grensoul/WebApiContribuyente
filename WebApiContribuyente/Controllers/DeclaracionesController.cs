@@ -6,23 +6,29 @@ namespace WebApiContribuyente.Controllers
 {
     [ApiController]
     [Route("api/declaraciones")]
-    public class DeclaracionesController: ControllerBase
+    public class DeclaracionesController : ControllerBase
     {
         private readonly ApplicationDbContext dbContext;
-        public DeclaracionesController (ApplicationDbContext context)
+        private readonly ILogger<DeclaracionesController> log;
+
+        public DeclaracionesController(ApplicationDbContext context, ILogger<DeclaracionesController> log)
         {
             this.dbContext = context;
+            this.log = log;
         }
 
         [HttpGet]
+        [HttpGet("/listadoDeclaracion")]
         public async Task<ActionResult<List<Declaracion>>> GetAll()
         {
+            log.LogInformation("Obteniendo listado de declaraciones");
             return await dbContext.Declaraciones.ToListAsync();
         }
 
         [HttpGet("{id:int}")]
         public async Task<ActionResult<Declaracion>> Get(int id)
         {
+            log.LogInformation("El ID es: " + id);
             return await dbContext.Declaraciones.FirstOrDefaultAsync(x => x.Id == id);
         }
 
